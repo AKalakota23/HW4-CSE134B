@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="projects.html">Projects</a>
+            <a href="experience.html">Experience</a>
+        </nav>
+    </header>
+    
+    <main>
+        <h1>Contact Me</h1>
+        
+        <form action="#" method="post">
+            <fieldset>
+                <legend>Contact Information</legend>
+                
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br>
+
+                <label for="reason">Reason:</label>
+                <select id="reason" name="reason">
+                    <optgroup label="Professional">
+                        <option value="job">Job Inquiry</option>
+                        <option value="collab">Collaboration</option>
+                    </optgroup>
+                    <optgroup label="General">
+                        <option value="question">Question</option>
+                        <option value="feedback">Feedback</option>
+                    </optgroup>
+                </select><br>
+
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" required></textarea><br>
+
+                <button type="submit">Send Message</button>
+            </fieldset>
+        </form>
+
+        <dialog open>
+            <p>Thank you for visiting my portfolio!</p>
+            <button onclick="document.querySelector('dialog').close()">Close</button>
+        </dialog>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Akhil Kalakota</p>
+    </footer>
+</body>
+</html>
