@@ -228,3 +228,83 @@ table thead {
     background-color: var(--secondary-color);
 }
 
+/* Centering the Form */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* Form Layout */
+form {
+    display: grid;
+    gap: 15px;
+    width: 350px;
+    background: var(--bg-color, #252525);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Labels */
+label {
+    font-weight: bold;
+    display: block;
+}
+
+/* Input Fields */
+input, textarea, select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Dropdown Styling */
+select {
+    cursor: pointer;
+}
+
+/* Error & Info Messages */
+output {
+    display: block;
+    color: red;
+    font-size: 0.9rem;
+}
+
+/* Submit Button */
+button {
+    background-color: var(--primary-color, #056c08);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--hover-color, #033605);
+}
+
+/* Navigation */
+nav ul {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    padding: 0;
+    background-color: #033605;
+}
+
+nav a {
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 10px 15px;
+    color: #4eee53;
+}
+
+nav a:hover {
+    color: var(--hover-color);
+}
