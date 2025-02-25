@@ -242,11 +242,11 @@ table thead {
 .contact-page form {
     display: grid;
     gap: 15px;
-    width: 350px;
+    width: 400px;
     background: var(--bg-color, #252525);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px 40px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 /* Labels */
