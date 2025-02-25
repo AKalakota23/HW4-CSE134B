@@ -228,8 +228,8 @@ table thead {
     background-color: var(--secondary-color);
 }
 
-/* Centering the Form */
-main {
+/* Apply styles ONLY to the Contact Page */
+.contact-page main {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -237,8 +237,9 @@ main {
     height: 100vh;
 }
 
-/* Form Layout */
-form {
+
+/* Contact Page Form Styling */
+.contact-page form {
     display: grid;
     gap: 15px;
     width: 350px;
@@ -249,13 +250,15 @@ form {
 }
 
 /* Labels */
-label {
+.contact-page label {
     font-weight: bold;
     display: block;
 }
 
 /* Input Fields */
-input, textarea, select {
+.contact-page input, 
+.contact-page textarea, 
+.contact-page select {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
@@ -264,19 +267,19 @@ input, textarea, select {
 }
 
 /* Dropdown Styling */
-select {
+.contact-page select {
     cursor: pointer;
 }
 
 /* Error & Info Messages */
-output {
+.contact-page output {
     display: block;
     color: red;
     font-size: 0.9rem;
 }
 
 /* Submit Button */
-button {
+.contact-page button {
     background-color: var(--primary-color, #056c08);
     color: white;
     border: none;
@@ -285,26 +288,6 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.contact-page button:hover {
     background-color: var(--hover-color, #033605);
-}
-
-/* Navigation */
-nav ul {
-    display: flex;
-    justify-content: space-around;
-    list-style: none;
-    padding: 0;
-    background-color: #033605;
-}
-
-nav a {
-    text-decoration: none;
-    font-size: 1.1rem;
-    padding: 10px 15px;
-    color: #4eee53;
-}
-
-nav a:hover {
-    color: var(--hover-color);
 }
