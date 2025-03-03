@@ -249,6 +249,10 @@ table thead {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
 }
 
+.contact-page .required{
+    color: red;
+}
+
 /* Labels */
 .contact-page label {
     font-weight: bold;
@@ -291,3 +295,5 @@ table thead {
 .contact-page button:hover {
     background-color: var(--hover-color, #033605);
 }
+
+
