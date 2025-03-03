@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function showError(outputId, message) {
         const output = document.getElementById(outputId);
         output.textContent = message;
-        output.style.color = "lightred";
+        output.style.color = "white";
         output.style.fontSize = "0.9rem";
 
         // Flash effect

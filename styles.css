@@ -334,7 +334,8 @@ table thead {
 }
 
 .flash {
-    animation: flash 0.5s ease-in-out;
+    animation: flash 2s ease-in-out;
 }
+
 
 
