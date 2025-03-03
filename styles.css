@@ -63,8 +63,8 @@ nav a {
 }
 
 nav a:hover {
-    color: var(--hover-color);
-    background-color: darkgray;
+    color: red;
+    background-color: #023103;
     transform: scale(1.1);
 }
 
@@ -282,12 +282,40 @@ table thead {
     font-size: 0.9rem;
 }
 
+/* Show validation only after user interaction */
+.contact-page input:focus:invalid,
+.contact-page textarea:focus:invalid {
+    border-left: 4px solid red;
+    background-color: rgba(255, 0, 0, 0.1);
+    color:white;
+}
+
+/* Green Border for Valid Inputs */
+.contact-page input:valid,
+.contact-page textarea:valid {
+    border-left: 4px solid green;
+    outline-color: green;
+}
+.contact-page input:focus:valid,
+.contact-page textarea:focus:valid {
+    border-left: 6px solid green;
+    outline-color: green;
+
+}
+
+
+/* Styling Placeholder */
+.contact-page input:placeholder-shown,
+.contact-page textarea:placeholder-shown {
+    opacity: 0.6;
+}
+
 /* Submit Button */
 .contact-page button {
     background-color: var(--primary-color, #056c08);
     color: white;
     border: none;
-    padding: 10px;
+    padding: 12px;
     border-radius: 4px;
     cursor: pointer;
 }
@@ -295,5 +323,6 @@ table thead {
 .contact-page button:hover {
     background-color: var(--hover-color, #033605);
 }
+
 
 
