@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return emailPattern.test(email);
     }
 
-    // Function to Add Error to `form_errors[]`
+    // Function to Log Errors
     function logError(field, message) {
         form_errors.push({ field: field, message: message });
     }
@@ -61,11 +61,14 @@ document.addEventListener("DOMContentLoaded", function () {
             logError("comments", "Comment too short");
         }
 
-        // ✅ Convert Errors to JSON & Set to Hidden Input Before Submission
+        // ✅ **Ensure `form-errors` is Updated Before Submission**
+        formErrorsInput.value = JSON.stringify(form_errors);
+
+        console.log("Captured Form Errors:", form_errors); // Debugging Log
+
+        // ❌ Prevent Submission if Errors Exist
         if (form_errors.length > 0) {
-            formErrorsInput.value = JSON.stringify(form_errors);
-            event.preventDefault(); // Prevent form submission if errors exist
-            console.log("Captured Form Errors:", form_errors); // Debugging Log
+            event.preventDefault();
         }
     });
 
