@@ -5,36 +5,33 @@ document.addEventListener("DOMContentLoaded", function () {
     const themeSwitcher = document.getElementById("theme-switcher");
     const body = document.body;
     
-    // Function to apply a theme based on a settings object
+    // Function to apply a theme from a settings object by updating CSS variables and the font family.
     function applyTheme(themeSettings) {
-      // Update CSS variables on the document root
       document.documentElement.style.setProperty("--bg-color", themeSettings.bgColor);
       document.documentElement.style.setProperty("--text-color", themeSettings.textColor);
-      // Update the body's font family
       body.style.fontFamily = themeSettings.font;
     }
     
-    // On page load, check localStorage for the saved theme
+    // Check localStorage for the saved theme selection.
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
       body.classList.add("dark-theme");
-      themeSwitcher.textContent = "🌜"; // Moon icon for dark mode
+      themeSwitcher.textContent = "🌜"; // Moon icon for dark mode.
     } else if (savedTheme === "custom") {
       const customThemeJSON = localStorage.getItem("activeCustomTheme");
       if (customThemeJSON) {
         const customTheme = JSON.parse(customThemeJSON);
         applyTheme(customTheme);
       }
-      // Always show the standard sun for light mode
-      themeSwitcher.textContent = "🌞";
+      themeSwitcher.textContent = "🌞"; // Use sun icon for light mode.
     } else {
-      themeSwitcher.textContent = "🌞"; // Default (light mode)
+      themeSwitcher.textContent = "🌞"; // Default is light mode.
     }
     
-    // Toggle dark/light theme on switcher click
+    // Toggle dark/light theme on switcher click.
     if (themeSwitcher) {
       themeSwitcher.addEventListener("click", function () {
-        // If a custom theme is active, remove it
+        // If a custom theme is active, clear it.
         if (localStorage.getItem("theme") === "custom") {
           localStorage.removeItem("activeCustomTheme");
         }
@@ -55,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const applyCustomThemeButton = document.getElementById("apply-custom-theme");
     const savedThemeSelector = document.getElementById("saved-theme-selector");
     
-    // Function to update the saved theme selector dropdown
+    // Function to update the saved theme dropdown.
     function updateSavedThemeSelector() {
       let customThemes = JSON.parse(localStorage.getItem("customThemes") || "[]");
       savedThemeSelector.innerHTML = "";
@@ -72,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
     
-    // On page load, update the selector
+    // Update the saved theme dropdown on page load.
     if (savedThemeSelector) {
       updateSavedThemeSelector();
       
@@ -83,18 +80,16 @@ document.addEventListener("DOMContentLoaded", function () {
           let selectedTheme = customThemes[selectedIndex];
           if (selectedTheme) {
             applyTheme(selectedTheme);
-            // Mark custom theme as active
             localStorage.setItem("activeCustomTheme", JSON.stringify(selectedTheme));
             localStorage.setItem("theme", "custom");
-            themeSwitcher.textContent = "🌞"; // Use sun icon for custom/light theme
-            // Remove any dark-theme class if present
+            themeSwitcher.textContent = "🌞"; // Always show sun icon for custom (light) theme.
             body.classList.remove("dark-theme");
           }
         }
       });
     }
     
-    // When the user applies a custom theme, save it and update the selector
+    // When user applies a custom theme, save it and update the dropdown.
     if (applyCustomThemeButton) {
       applyCustomThemeButton.addEventListener("click", () => {
         const themeName = document.getElementById("theme-name").value || "Custom Theme";
@@ -109,26 +104,22 @@ document.addEventListener("DOMContentLoaded", function () {
           font: font
         };
     
-        // Save custom theme in an array in localStorage
         let customThemes = JSON.parse(localStorage.getItem("customThemes") || "[]");
         customThemes.push(customTheme);
         localStorage.setItem("customThemes", JSON.stringify(customThemes));
     
-        // Apply the custom theme immediately
+        // Apply the custom theme immediately.
         applyTheme(customTheme);
         body.classList.remove("dark-theme");
         localStorage.setItem("activeCustomTheme", JSON.stringify(customTheme));
         localStorage.setItem("theme", "custom");
         themeSwitcher.textContent = "🌞";
     
-        // Update the saved theme selector dropdown
         updateSavedThemeSelector();
       });
     }
     
-    // -------------------------------------------------------
-    // Existing Contact Form Validation & Logging (if present)
-    // -------------------------------------------------------
+    // Contact Form Validation & Error Logging
     const form = document.getElementById("contact-form");
     if (form) {
       const nameInput = document.getElementById("name");

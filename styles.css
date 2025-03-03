@@ -111,6 +111,21 @@
   button.theme-switcher:hover {
     background-color: var(--hover-color, #033605);
   }
+  /* Center the saved custom themes dropdown */
+.custom-theme-picker #saved-theme-selector {
+    display: block;
+    margin: 8px auto;
+  }
+  
+  /* Add extra spacing above and below the Apply Custom Theme button */
+  .custom-theme-picker button#apply-custom-theme {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    /* Optionally, add extra padding inside the button */
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
   
   /* Custom Theme Picker Styling (Dropdown using <details>) */
   .custom-theme-picker {
@@ -129,21 +144,7 @@
     padding: 5px;
     font-weight: bold;
   }
-
-  .custom-theme-picker #saved-theme-selector {
-    display: block;
-    margin: 0 auto;
-    margin-bottom: 8px;
-  }
   
-  .custom-theme-picker button#apply-custom-theme {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    /* Optionally, add extra padding inside the button */
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-
   .custom-theme-picker .custom-theme-options {
     margin-top: 10px;
     text-align: center;
