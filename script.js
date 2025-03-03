@@ -61,13 +61,11 @@ document.addEventListener("DOMContentLoaded", function () {
             logError("comments", "Comment too short");
         }
 
-        // ✅ Ensure `form-errors` is updated with JSON before submission
-        formErrorsInput.value = JSON.stringify(form_errors);
-
-        // ❌ Prevent Submission if Errors Exist
+        // ✅ Convert Errors to JSON & Set to Hidden Input Before Submission
         if (form_errors.length > 0) {
-            event.preventDefault();
-            console.log("Form Errors:", form_errors); // Debugging Log
+            formErrorsInput.value = JSON.stringify(form_errors);
+            event.preventDefault(); // Prevent form submission if errors exist
+            console.log("Captured Form Errors:", form_errors); // Debugging Log
         }
     });
 
