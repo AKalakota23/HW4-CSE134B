@@ -1,20 +1,43 @@
 document.addEventListener("DOMContentLoaded", function () {
     // ---------------------------
-    // Dark & Light Theme Switcher
+    // Dark & Light Theme Switcher and Custom Themes
     // ---------------------------
     const themeSwitcher = document.getElementById("theme-switcher");
-    if (themeSwitcher) {
-      const body = document.body;
-      // Retrieve saved theme from localStorage
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme === "dark") {
-        body.classList.add("dark-theme");
-        themeSwitcher.textContent = "🌜"; // Moon icon indicates dark mode
-      } else {
-        themeSwitcher.textContent = "🌞"; // Sun icon indicates light mode
+    const body = document.body;
+    
+    // Function to apply a theme based on a settings object
+    function applyTheme(themeSettings) {
+      // Update CSS variables on the document root
+      document.documentElement.style.setProperty("--bg-color", themeSettings.bgColor);
+      document.documentElement.style.setProperty("--text-color", themeSettings.textColor);
+      // Update the body's font family
+      body.style.fontFamily = themeSettings.font;
+    }
+    
+    // On page load, check localStorage for the saved theme
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      body.classList.add("dark-theme");
+      themeSwitcher.textContent = "🌜"; // Moon icon for dark mode
+    } else if (savedTheme === "custom") {
+      const customThemeJSON = localStorage.getItem("activeCustomTheme");
+      if (customThemeJSON) {
+        const customTheme = JSON.parse(customThemeJSON);
+        applyTheme(customTheme);
       }
-      // Toggle theme on click and save preference to localStorage
+      // Always show the standard sun for light mode
+      themeSwitcher.textContent = "🌞";
+    } else {
+      themeSwitcher.textContent = "🌞"; // Default (light mode)
+    }
+    
+    // Toggle dark/light theme on switcher click
+    if (themeSwitcher) {
       themeSwitcher.addEventListener("click", function () {
+        // If a custom theme is active, remove it
+        if (localStorage.getItem("theme") === "custom") {
+          localStorage.removeItem("activeCustomTheme");
+        }
         body.classList.toggle("dark-theme");
         if (body.classList.contains("dark-theme")) {
           themeSwitcher.textContent = "🌜";
@@ -25,7 +48,84 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     }
-  
+    
+    // ---------------------------
+    // Extra Custom Theme Picker Code
+    // ---------------------------
+    const applyCustomThemeButton = document.getElementById("apply-custom-theme");
+    const savedThemeSelector = document.getElementById("saved-theme-selector");
+    
+    // Function to update the saved theme selector dropdown
+    function updateSavedThemeSelector() {
+      let customThemes = JSON.parse(localStorage.getItem("customThemes") || "[]");
+      savedThemeSelector.innerHTML = "";
+      if (customThemes.length > 0) {
+        customThemes.forEach((theme, index) => {
+          let option = document.createElement("option");
+          option.value = index;
+          option.textContent = theme.name;
+          savedThemeSelector.appendChild(option);
+        });
+        savedThemeSelector.style.display = "block";
+      } else {
+        savedThemeSelector.style.display = "none";
+      }
+    }
+    
+    // On page load, update the selector
+    if (savedThemeSelector) {
+      updateSavedThemeSelector();
+      
+      savedThemeSelector.addEventListener("change", function () {
+        let customThemes = JSON.parse(localStorage.getItem("customThemes") || "[]");
+        const selectedIndex = parseInt(this.value);
+        if (!isNaN(selectedIndex)) {
+          let selectedTheme = customThemes[selectedIndex];
+          if (selectedTheme) {
+            applyTheme(selectedTheme);
+            // Mark custom theme as active
+            localStorage.setItem("activeCustomTheme", JSON.stringify(selectedTheme));
+            localStorage.setItem("theme", "custom");
+            themeSwitcher.textContent = "🌞"; // Use sun icon for custom/light theme
+            // Remove any dark-theme class if present
+            body.classList.remove("dark-theme");
+          }
+        }
+      });
+    }
+    
+    // When the user applies a custom theme, save it and update the selector
+    if (applyCustomThemeButton) {
+      applyCustomThemeButton.addEventListener("click", () => {
+        const themeName = document.getElementById("theme-name").value || "Custom Theme";
+        const bgColor = document.getElementById("bg-color-picker").value;
+        const textColor = document.getElementById("text-color-picker").value;
+        const font = document.getElementById("font-picker").value;
+    
+        const customTheme = {
+          name: themeName,
+          bgColor: bgColor,
+          textColor: textColor,
+          font: font
+        };
+    
+        // Save custom theme in an array in localStorage
+        let customThemes = JSON.parse(localStorage.getItem("customThemes") || "[]");
+        customThemes.push(customTheme);
+        localStorage.setItem("customThemes", JSON.stringify(customThemes));
+    
+        // Apply the custom theme immediately
+        applyTheme(customTheme);
+        body.classList.remove("dark-theme");
+        localStorage.setItem("activeCustomTheme", JSON.stringify(customTheme));
+        localStorage.setItem("theme", "custom");
+        themeSwitcher.textContent = "🌞";
+    
+        // Update the saved theme selector dropdown
+        updateSavedThemeSelector();
+      });
+    }
+    
     // -------------------------------------------------------
     // Existing Contact Form Validation & Logging (if present)
     // -------------------------------------------------------
@@ -36,19 +136,16 @@ document.addEventListener("DOMContentLoaded", function () {
       const commentsInput = document.getElementById("comments");
       const formErrorsInput = document.getElementById("form-errors");
       let form_errors = [];  // Cumulative log of errors
-  
-      // Strict Email Validation Function
+    
       function validateEmail(email) {
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailPattern.test(email);
       }
-  
-      // Function to add an error to form_errors[]
+    
       function logError(field, message) {
         form_errors.push({ field: field, message: message });
       }
-  
-      // Function to show errors in the UI with flash effect
+    
       function showError(outputId, message) {
         const output = document.getElementById(outputId);
         output.textContent = message;
@@ -60,37 +157,30 @@ document.addEventListener("DOMContentLoaded", function () {
           output.textContent = "";
         }, 3000);
       }
-  
-      // Name Field - Only Allow Letters & Spaces
+    
       nameInput.addEventListener("input", function () {
-        const regex = /^[A-Za-z\s]*$/; // Allow empty string or valid characters
+        const regex = /^[A-Za-z\s]*$/;
         if (!regex.test(this.value)) {
           logError("name", "Illegal character entered in name field.");
-          // Remove disallowed characters
           this.value = this.value.replace(/[^A-Za-z\s]/g, "");
           showError("name-error", "Only letters and spaces allowed.");
         }
       });
-  
-      // Email Field - Log error on blur if invalid
+    
       emailInput.addEventListener("blur", function () {
         if (this.value && !validateEmail(this.value)) {
           logError("email", "Invalid email address entered.");
           showError("email-error", "Enter a valid email address.");
         }
       });
-  
-      // Comments Field - Log error if character limit exceeded or on blur if too short
+    
       commentsInput.addEventListener("input", function () {
         const maxChars = 500;
         const currentLength = this.value.length;
         const remaining = maxChars - currentLength;
         const counter = document.getElementById("char-count");
-  
-        // Display 0 characters left if exceeded
         counter.textContent = remaining >= 0 ? `${remaining} characters left` : "0 characters left";
         counter.style.color = remaining < 50 ? "red" : "white";
-  
         if (currentLength > maxChars) {
           logError("comments", "Exceeded maximum characters.");
           if (!counter.classList.contains("flash")) {
@@ -102,13 +192,10 @@ document.addEventListener("DOMContentLoaded", function () {
           showError("comments-error", "You have reached the character limit.");
         }
       });
-  
-      // Prevent further keystrokes if max limit reached for comments
+    
       commentsInput.addEventListener("keydown", function (event) {
         const maxChars = 500;
-        const allowedKeys = [
-          "Backspace", "Delete", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"
-        ];
+        const allowedKeys = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"];
         if (this.value.length >= maxChars && event.key.length === 1 && !allowedKeys.includes(event.key)) {
           event.preventDefault();
           const counter = document.getElementById("char-count");
@@ -122,45 +209,29 @@ document.addEventListener("DOMContentLoaded", function () {
           logError("comments", "Reached maximum characters.");
         }
       });
-  
-      // Comments Field - On blur, log error if too short
+    
       commentsInput.addEventListener("blur", function () {
         if (this.value.length < 10) {
           logError("comments", "Comment too short.");
           showError("comments-error", "Comments must be at least 10 characters.");
         }
       });
-  
-      // Form Submission Handler
+    
       form.addEventListener("submit", function (event) {
-        // Validate Name
         if (!nameInput.checkValidity()) {
           showError("name-error", "Name must be at least 2 characters and contain only letters.");
           logError("name", "Invalid Name");
         }
-  
-        // Validate Email
         if (!validateEmail(emailInput.value)) {
           showError("email-error", "Enter a valid email address.");
           logError("email", "Invalid Email");
         }
-  
-        // Validate Comments Length (minimum)
         if (commentsInput.value.length < 10) {
           showError("comments-error", "Comments must be at least 10 characters.");
           logError("comments", "Comment too short");
         }
-  
-        // Update hidden field with the accumulated error log (JSON-encoded)
         formErrorsInput.value = JSON.stringify(form_errors);
-  
-        console.log("Captured Form Errors:", form_errors); // For debugging
-  
-        // For testing purposes, you might allow submission even if errors exist.
-        // If you want to force the user to fix errors, uncomment the next block:
-        // if (form_errors.length > 0) {
-        //     event.preventDefault();
-        // }
+        console.log("Captured Form Errors:", form_errors);
       });
     }
   });

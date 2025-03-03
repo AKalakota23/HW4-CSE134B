@@ -12,7 +12,6 @@
   <title>Portfolio</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Additional inline styles if needed */
     body { border: 1px solid black; }
     img { width: 150px; height: auto; }
     custom-semantic-element {
@@ -30,14 +29,6 @@
     </hgroup>
     <!-- Hamburger Menu Button -->
     <button class="menu-toggle" aria-label="Toggle navigation">☰</button>
-    <!-- Theme Switcher Button -->
-    <button id="theme-switcher" class="theme-switcher" aria-label="Toggle dark/light theme"></button>
-    <noscript>
-      <style>
-        #theme-switcher { display: none; }
-      </style>
-      <p class="noscript-notice">Note: Theme switching requires JavaScript.</p>
-    </noscript>
     <nav class="menu">
       <ul>
         <li><a href="index.html">Home</a></li>
@@ -47,6 +38,45 @@
         <li><a href="contact.html">Contact</a></li>
       </ul>
     </nav>
+    <!-- Theme Switcher Container placed under nav -->
+    <div class="theme-switcher-container">
+      <button id="theme-switcher" class="theme-switcher" aria-label="Toggle dark/light theme"></button>
+      <noscript>
+        <style>
+          #theme-switcher { display: none; }
+        </style>
+        <p class="noscript-notice">Note: Theme switching requires JavaScript.</p>
+      </noscript>
+    </div>
+    <!-- Custom Theme Picker (Collapsible Dropdown) -->
+    <details class="custom-theme-picker">
+      <summary>Customize Theme</summary>
+      <div class="custom-theme-options">
+        <label for="theme-name">Theme Name:</label>
+        <input type="text" id="theme-name" placeholder="My Custom Theme">
+        
+        <label for="bg-color-picker">Background Color:</label>
+        <input type="color" id="bg-color-picker" value="#393939">
+        
+        <label for="text-color-picker">Text Color:</label>
+        <input type="color" id="text-color-picker" value="#ffffff">
+        
+        <label for="font-picker">Font:</label>
+        <select id="font-picker">
+          <option value="'Arial', sans-serif">Arial</option>
+          <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+          <option value="'Lucida Sans', sans-serif">Lucida Sans</option>
+          <option value="'CustomFont', sans-serif">CustomFont</option>
+        </select>
+        
+        <button id="apply-custom-theme">Apply Custom Theme</button>
+        
+        <label for="saved-theme-selector">Saved Custom Themes:</label>
+        <select id="saved-theme-selector">
+          <!-- Options will be populated by JavaScript -->
+        </select>
+      </div>
+    </details>
   </header>
 
   <main>
