@@ -119,8 +119,8 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Form Errors:", form_errors); // Debug log
 
         // Prevent submission if errors exist
-      //  if (form_errors.length > 0) {
-        //    event.preventDefault();
-       '' }
-  //  });
+        // if (form_errors.length > 0) {
+        //     event.preventDefault();
+        // }
+    });
 });
