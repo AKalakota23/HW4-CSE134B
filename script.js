@@ -12,9 +12,22 @@ document.addEventListener("DOMContentLoaded", function () {
         return emailPattern.test(email);
     }
 
-    // Function to Log Errors
+    // Function to Add Error to `form_errors[]`
     function logError(field, message) {
         form_errors.push({ field: field, message: message });
+    }
+
+    // Function to Show Errors in UI
+    function showError(outputId, message) {
+        const output = document.getElementById(outputId);
+        output.textContent = message;
+        output.style.color = "white";
+        output.style.fontSize = "0.9rem";
+        output.classList.add("flash");
+        setTimeout(() => {
+            output.classList.remove("flash");
+            output.textContent = "";
+        }, 3000);
     }
 
     // Name Field - Only Allow Letters & Spaces
@@ -28,14 +41,53 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Character Countdown for Comments Field
     commentsInput.addEventListener("input", function () {
-        const remaining = 500 - this.value.length;
+        const maxChars = 500;
+        const remaining = maxChars - this.value.length;
         const counter = document.getElementById("char-count");
 
-        counter.textContent = `${remaining} characters left`;
+        counter.textContent = remaining >= 0 ? `${remaining} characters left` : "0 characters left";
         counter.style.color = remaining < 50 ? "red" : "white";
 
-        if (remaining <= 0) {
+        // Flash error if text exceeds max length (if somehow pasted in extra characters)
+        if (this.value.length > maxChars) {
+            if (!counter.classList.contains("flash")) {
+                counter.classList.add("flash");
+                setTimeout(() => {
+                    counter.classList.remove("flash");
+                }, 1500);
+            }
             showError("comments-error", "You have reached the character limit.");
+            logError("comments", "Exceeded maximum characters");
+        }
+    });
+
+    // Prevent further keystrokes if max limit reached
+    commentsInput.addEventListener("keydown", function (event) {
+        const maxChars = 500;
+        // Allow control keys even if limit is reached
+        const allowedKeys = [
+            "Backspace",
+            "Delete",
+            "ArrowLeft",
+            "ArrowRight",
+            "ArrowUp",
+            "ArrowDown",
+            "Home",
+            "End"
+        ];
+
+        // If the length is at or above the limit and the key pressed is a single character (not a control key)
+        if (this.value.length >= maxChars && event.key.length === 1 && !allowedKeys.includes(event.key)) {
+            event.preventDefault();
+            const counter = document.getElementById("char-count");
+            if (!counter.classList.contains("flash")) {
+                counter.classList.add("flash");
+                setTimeout(() => {
+                    counter.classList.remove("flash");
+                }, 1500);
+            }
+            showError("comments-error", "You have reached the character limit.");
+            logError("comments", "Reached maximum characters.");
         }
     });
 
@@ -61,29 +113,14 @@ document.addEventListener("DOMContentLoaded", function () {
             logError("comments", "Comment too short");
         }
 
-        // ✅ **Ensure `form-errors` is Updated Before Submission**
+        // Update hidden field with JSON error log
         formErrorsInput.value = JSON.stringify(form_errors);
 
-        console.log("Captured Form Errors:", form_errors); // Debugging Log
+        console.log("Form Errors:", form_errors); // Debug log
 
-        // ❌ Prevent Submission if Errors Exist
+        // Prevent submission if errors exist
         if (form_errors.length > 0) {
             event.preventDefault();
         }
     });
-
-    // Function to Show Errors in UI
-    function showError(outputId, message) {
-        const output = document.getElementById(outputId);
-        output.textContent = message;
-        output.style.color = "white";
-        output.style.fontSize = "0.9rem";
-
-        // Flash effect
-        output.classList.add("flash");
-        setTimeout(() => {
-            output.classList.remove("flash");
-            output.textContent = "";
-        }, 3000);
-    }
 });
