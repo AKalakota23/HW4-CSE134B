@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const emailInput = document.getElementById("email");
     const commentsInput = document.getElementById("comments");
     const formErrorsInput = document.getElementById("form-errors");
-    let form_errors = [];
+    let form_errors = [];  // Cumulative log of errors
 
     // Strict Email Validation Function
     function validateEmail(email) {
@@ -12,16 +12,17 @@ document.addEventListener("DOMContentLoaded", function () {
         return emailPattern.test(email);
     }
 
-    // Function to Add Error to `form_errors[]`
+    // Function to Add Error to form_errors[]
     function logError(field, message) {
+        // You could add more details (like timestamp) if needed
         form_errors.push({ field: field, message: message });
     }
 
-    // Function to Show Errors in UI
+    // Function to Show Errors in UI with flash effect
     function showError(outputId, message) {
         const output = document.getElementById(outputId);
         output.textContent = message;
-        output.style.color = "white";
+        output.style.color = "red";
         output.style.fontSize = "0.9rem";
         output.classList.add("flash");
         setTimeout(() => {
@@ -32,8 +33,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Name Field - Only Allow Letters & Spaces
     nameInput.addEventListener("input", function () {
-        const regex = /^[A-Za-z\s]+$/;
+        const regex = /^[A-Za-z\s]*$/; // allow empty string or valid characters
         if (!regex.test(this.value)) {
+            logError("name", "Illegal character entered in name field.");
+            // Remove disallowed characters
             this.value = this.value.replace(/[^A-Za-z\s]/g, "");
             showError("name-error", "Only letters and spaces allowed.");
         }
@@ -42,14 +45,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // Character Countdown for Comments Field
     commentsInput.addEventListener("input", function () {
         const maxChars = 500;
-        const remaining = maxChars - this.value.length;
+        const currentLength = this.value.length;
+        const remaining = maxChars - currentLength;
         const counter = document.getElementById("char-count");
 
         counter.textContent = remaining >= 0 ? `${remaining} characters left` : "0 characters left";
         counter.style.color = remaining < 50 ? "red" : "white";
 
-        // Flash error if text exceeds max length (if somehow pasted in extra characters)
-        if (this.value.length > maxChars) {
+        if (currentLength > maxChars) {
+            // Log error as soon as the limit is exceeded.
+            logError("comments", "Exceeded maximum characters.");
+            // Flash the counter element if not already flashing
             if (!counter.classList.contains("flash")) {
                 counter.classList.add("flash");
                 setTimeout(() => {
@@ -57,28 +63,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 }, 1500);
             }
             showError("comments-error", "You have reached the character limit.");
-            logError("comments", "Exceeded maximum characters");
         }
     });
 
-    // Prevent further keystrokes if max limit reached
+    // Prevent further keystrokes if max limit reached (for comments field)
     commentsInput.addEventListener("keydown", function (event) {
         const maxChars = 500;
-        // Allow control keys even if limit is reached
         const allowedKeys = [
-            "Backspace",
-            "Delete",
-            "ArrowLeft",
-            "ArrowRight",
-            "ArrowUp",
-            "ArrowDown",
-            "Home",
-            "End"
+            "Backspace", "Delete", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"
         ];
-
-        // If the length is at or above the limit and the key pressed is a single character (not a control key)
         if (this.value.length >= maxChars && event.key.length === 1 && !allowedKeys.includes(event.key)) {
             event.preventDefault();
+            // Flash the counter as feedback
             const counter = document.getElementById("char-count");
             if (!counter.classList.contains("flash")) {
                 counter.classList.add("flash");
@@ -91,9 +87,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Prevent Form Submission if Errors Exist
+    // Form Submission Handler
     form.addEventListener("submit", function (event) {
-        form_errors = []; // Reset error array
+        // DO NOT reset form_errors here – let it accumulate all mistakes.
+        // form_errors = []; // (Commented out so earlier errors remain)
 
         // Validate Name
         if (!nameInput.checkValidity()) {
@@ -113,12 +110,13 @@ document.addEventListener("DOMContentLoaded", function () {
             logError("comments", "Comment too short");
         }
 
-        // Update hidden field with JSON error log
+        // Update the hidden field with the accumulated error log
         formErrorsInput.value = JSON.stringify(form_errors);
 
-        console.log("Form Errors:", form_errors); // Debug log
+        console.log("Captured Form Errors:", form_errors); // Debugging Log
 
-        // Prevent submission if errors exist
+        // Optionally, you can block submission if there are errors.
+        // For testing (to see the errors logged), you might allow submission.
         // if (form_errors.length > 0) {
         //     event.preventDefault();
         // }
