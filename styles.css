@@ -282,6 +282,8 @@ table thead {
     font-size: 0.9rem;
 }
 
+
+
 /* Show validation only after user interaction */
 .contact-page input:focus:invalid,
 .contact-page textarea:focus:invalid {
@@ -324,5 +326,15 @@ table thead {
     background-color: var(--hover-color, #033605);
 }
 
+/* Flashing Error Effect */
+@keyframes flash {
+    0% { background-color: rgba(255, 0, 0, 0.2); }
+    50% { background-color: rgba(255, 0, 0, 0.5); }
+    100% { background-color: rgba(255, 0, 0, 0.2); }
+}
+
+.flash {
+    animation: flash 0.5s ease-in-out;
+}
 
 
